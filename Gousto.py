@@ -2,21 +2,6 @@ import streamlit as st
 import pandas as pd
 import smtplib
 
-def send_email(text):
-    sender_email = 'stevio.bar@gmail.com'
-    rec_email = 'house.cogliani@gmail.com'
-    password = 'Luigifox7'
-    message = text
-
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login(sender_email,password)
-    server.ehlo()
-    server.sendmail(sender_email,rec_email,message)
-
-
-
 st.write("""# Gousto Grocery List Generator""")
 
 df = pd.read_csv('df.csv')
@@ -27,6 +12,27 @@ df_ = df.groupby('ing_name', as_index=False)['ing_q'].sum()
 
 text = df_.to_string(header=False,index=False,justify='left')
 text = 'Shopping List\n' + text
+
+#yandex mail settings
+#https://www.lifewire.com/what-are-the-yandex-mail-smtp-settings-1171304
+def send_email(text):
+    
+    rec_email = 'house.cogliani@gmail.com'
+    message = text
+
+    sender_email = 'stevio.bar@gmail.com'
+    password = 'Luigifox7'
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    #server.ehlo()
+    server.starttls()
+    server.login(sender_email,password)
+    #server.ehlo()
+    server.sendmail(sender_email,rec_email,message)
+    # sender_email = 'hosue.cogliani@yandex.com'
+    # password = 'B0tcogliani!'
+    # server = smtplib.SMTP('smtp.yandex.com', 465)
+    # server.login(sender_email,password)
+    # server.sendmail(sender_email,rec_email,message)
 
 st.button('Send!',on_click=send_email(text))
 st.write(df_)
